@@ -18,14 +18,13 @@ json structure:
 string -> json: json.loads()
 json -> string: json.dumps()
 
-import datetime, json
+import datetime, json, sys, logging
 
-CLI structure: args[0]
+CLI structure: sys.argv[0] is the main keyword, argv[1] is the 
 
-getNewId(): int 
-addTask(description): Boolean
-readTask(): None | if there's no such file, use try and except to catch the error
-listTask()
+loadTasks(): None | if there's no such file, use try and except to catch the error
+writeTasks(dict Tasks): Boolean
+addTask(description): int id
 delTask(id): Boolean | try and catch
 updateTask(id, "description): Boolean
 
@@ -34,4 +33,27 @@ markTaskDone(id): Boolean
 
 
 listTaskByStatus(str status)
+
+
+Testing and debugging:
+
+addTask(description)
+1. with both arguments
+2. without both arguments
+
+loadTask()
+1. file exists and name correct
+2. file not exist
+3. filename incorrect
+
+listTask()
+1. with tasks
+2. no tasks
+
+delTask()
+1. with id: successfully delete
+2. without id: give error to try again
+
+
+
 
