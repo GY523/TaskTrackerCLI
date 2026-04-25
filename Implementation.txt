@@ -1,0 +1,37 @@
+Each Task should have the following properties:
+task = {
+id: A unique identifier for the task (int)
+description: A short description of the task (str)
+status: The status of the task (todo, in-progress, done) (tuple)
+createdAt: The date and time when the task was created (str/datetime)
+updatedAt: The date and time when the task was last updated (str/datetime)
+}
+
+json structure:
+{id:
+	{description:"",
+	status: '',
+	createdAt: datetime,
+	updatedAt: datetime}
+}
+
+string -> json: json.loads()
+json -> string: json.dumps()
+
+import datetime, json
+
+CLI structure: args[0]
+
+getNewId(): int 
+addTask(description): Boolean
+readTask(): None | if there's no such file, use try and except to catch the error
+listTask()
+delTask(id): Boolean | try and catch
+updateTask(id, "description): Boolean
+
+markTaskInProgress(id): Boolean 
+markTaskDone(id): Boolean
+
+
+listTaskByStatus(str status)
+
