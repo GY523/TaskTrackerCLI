@@ -39,8 +39,27 @@ def listTask(status):
     return None
 
 # Internal functions
-def loadTask(task_file, task_dict):
-    return None
+
+# Read the all tasks from file and assign to a dictionary
+def loadTask(task_file):
+    # Open the file
+    try:
+        with open(task_file, 'r', encoding = 'utf-8') as f:
+            task_dict = json.load(f)
+            logging.debug(f'loadTask(): task data {task_dict}')
+
+            return task_dict
+        
+    # if file not found, create a new one
+    except FileNotFoundError:
+        logging.warning(f'{task_file} not found. Creating new file.')
+        with open(task_file, 'w', encoding = 'utf-8') as f:
+            f.write('{}')
+    except json.JSONDecodeError as err:
+        logging.error(f'JSON decode error: {err}')
+        print('Error parsing task data, check log for details')
+
+# Write the tasks from dictionary to the file
 def writeTask(task_file, task_dict):
     return None
 
