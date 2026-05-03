@@ -7,6 +7,10 @@ createdAt: The date and time when the task was created (str/datetime)
 updatedAt: The date and time when the task was last updated (str/datetime)
 }
 
+For the date time value, in file: datetime obj -> string,
+because there's operation to print it and not process it, it needs not to convert back to datetime object when read from the file.
+update operation is just re-assign the dt.datetime.now().strftime(fmt) string value.
+
 json structure:
 {id:
 	{description:"",

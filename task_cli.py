@@ -1,5 +1,5 @@
 #
-import sys, json, datetime, logging
+import sys, json, datetime as dt, logging
 
 # Define constants and global variable
 TASKFILE='task.json'
@@ -12,18 +12,27 @@ logging.basicConfig(filename=LOGFILE, level=logging.DEBUG, format=' %(asctime)s 
 # User functions
 def print_help():
     print(''' Task CLI - A simple Task Management Tool\n  
-          \tusage: task-cli [command] [parameters]\n
-          \tcommands:\n
-            \t\thelp - show this help message\n
-            \t\tadd (description) - add task with the description\n
-            \t\tupdate (id) (description - update the description of a task\n
-            \t\tdelete (id) - delete task with given id\n
-            \t\tmark-in-progress (id) - mark the specified task as in progress\n
-            \t\tmark-done (id) - mark the task as done\n
-            \t\tlist [status] - list all (without parameter) or by status\n
-              \t\t\t- status: todo/in-progress/done\n''')
+    usage: task-cli [command] [parameters]\n
+    commands:\n
+        help - show this help message\n
+        add (description) - add task with the description\n
+        update (id) (description - update the description of a task\n
+        delete (id) - delete task with given id\n
+        mark-in-progress (id) - mark the specified task as in progress\n
+        mark-done (id) - mark the task as done\n
+        list [status] - list all (without parameter) or by status\n
+            - status: todo/in-progress/done\n''')
     
-def addTask(description):
+# Add task with description given into task dictionary and write into file.
+def addTask(task_dict, description):
+    id = len(task_dict.keys()) + 1
+    # Define date time format
+    fmt = '%Y-%m-%d %H:%M:%S'
+    task_dict.update({id: {'desc': description,
+                            'status': 'todo',
+                            'createdAt': dt.datetime.now().strftime(fmt),
+                            'updatedAt': dt.datetime.now().strftime(fmt) }})
+    logging.debug(f'New Task with id: {id} has been added to the data')
     return id
 def updateTask(id, description):
     return None
@@ -61,13 +70,21 @@ def loadTask(task_file):
 
 # Write the tasks from dictionary to the file
 def writeTask(task_file, task_dict):
+    # Open the file to write
+    with open(task_file, 'w', encoding='utf-8') as f:
+        json.dump(task_dict, f, indent=4)
+        logging.debug(f'Task data updated to "{task_file}.')
     return None
 
 # Define the CLI structure
 # get the argument of from command line, if does not match all words, 
+task_dict = {}
 
 if len(sys.argv) > 1 and sys.argv[0].lower() in ['help', 'add','update','delete','mark-in-progress','mark-done','list']:
+    # Command given are valid
+    # Read the file
     command = sys.argv[0].lower()
+    task_dict = loadTask(TASKFILE)
 else:
     command = 'help'
 
