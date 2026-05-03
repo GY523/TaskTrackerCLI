@@ -44,7 +44,36 @@ def markTaskInProgress(id):
     return None
 def markTaskDone(id):
     return None
-def listTask(status):
+
+def listTask(task_dict: dict , status: str):
+    '''
+    List all the tasks store in dictionary if status is empty.
+    If status is given, list the tasks with the specified status only.
+    '''
+    # status is empty
+    if not status:
+        print('All Tasks'.center(40, '*'))
+
+        # Iterate through all the tasks and properties and print out
+        for id, properties in task_dict.items():
+            print(f'ID: {id}')
+            for k, v in properties.items():
+                print(f'    {k}: {v}')
+            print()
+    else:
+        print(f'Tasks {status}'.center(40, '*'))
+        cnt = 0
+        for id, properties in task_dict.items():
+            if properties['status'] == status:
+                print(f'ID: {id}')
+                for k, v in properties.items(): 
+                    print(f'    {k}: {v}')
+                print()
+                cnt += 1
+                
+        if cnt == 0:
+            print(f'No task with status: {status} found.')
+
     return None
 
 # Internal functions
@@ -74,6 +103,7 @@ def writeTask(task_file, task_dict):
     with open(task_file, 'w', encoding='utf-8') as f:
         json.dump(task_dict, f, indent=4)
         logging.debug(f'Task data updated to "{task_file}.')
+
     return None
 
 # Define the CLI structure
