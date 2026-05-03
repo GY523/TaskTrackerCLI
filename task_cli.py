@@ -32,7 +32,8 @@ def addTask(task_dict, description):
                             'status': 'todo',
                             'createdAt': dt.datetime.now().strftime(fmt),
                             'updatedAt': dt.datetime.now().strftime(fmt) }})
-    logging.debug(f'New Task with id: {id} has been added to the data')
+    logging.info(f'New Task with id: {id} has been added to the data')
+
     return id
 
 def updateTask(task_dict: dict, id: str , description: str):
@@ -45,12 +46,24 @@ def updateTask(task_dict: dict, id: str , description: str):
         # Update the updatedAt field
         fmt = '%Y-%m-%d %H:%M:%S'
         task_dict[id]['updatedAt'] = dt.datetime.now().strftime(fmt)
+        logging.info(f'Task with ID: {id} has been updated with new description: {description}')
     else:
-        print(f'Task with ID: {id} is not found. Check again for the existing id')
+        raise Exception(f'Task with ID: {id} is not found. Check again for the existing id')
     
     return None
     
-def deleteTask(id):
+def deleteTask(task_dict: dict, id: str):
+    '''
+    Delete the task with the given id.
+
+    if the id doesn't exist, raise Exception to be handled outside of function.
+    '''
+    if task_dict.get(id, 0):
+        del task_dict[id]
+        logging.info(f'Task with ID: {id} has been deleted')
+    else:
+        raise Exception(f'Task with ID: {id} is not found. Check again for the existing id')
+
     return None
 
 def markTaskInProgress(task_dict: dict , id: str):
@@ -66,8 +79,9 @@ def markTaskInProgress(task_dict: dict , id: str):
         # UPdate the updatedAt field
         fmt = '%Y-%m-%d %H:%M:%S'
         task_dict[id]['updatedAt'] = dt.datetime.now().strftime(fmt)
+        logging.info(f'Task with ID: {id} mark as in progress.')
     else:
-        print(f'Task with ID: {id} is not found. Check again for the existing id')
+        raise Exception(f'Task with ID: {id} is not found. Check again for the existing id')
 
     return None
 
@@ -84,9 +98,10 @@ def markTaskDone(task_dict: dict , id: str):
         # Update the updatedAt field
         fmt = '%Y-%m-%d %H:%M:%S'
         task_dict[id]['updatedAt'] = dt.datetime.now().strftime(fmt)
+        logging.info(f'Task with ID: {id} mark as done.')
     else:
-        print(f'Task with ID: {id} is not found. Check again for the existing id')
-        
+        raise Exception(f'Task with ID: {id} is not found. Check again for the existing id')
+
     return None
 
 def listTask(task_dict: dict , status: str):
@@ -139,8 +154,9 @@ def loadTask(task_dict, task_file):
         with open(task_file, 'w', encoding = 'utf-8') as f:
             f.write('{}')
     except json.JSONDecodeError as err:
-        logging.error(f'JSON decode error: {err}')
-        print('Error parsing task data, check log for details')
+        err = f'JSON decode error: {err}'
+        logging.error(err)
+        print(err)
 
 # Write the tasks from dictionary to the file
 def writeTask(task_file, task_dict):
@@ -171,8 +187,9 @@ elif command == 'add':
         id = addTask(description)
         print(f'Task added successfully (ID: {id})')
     except Exception as err:
-        logging.error(f'Error adding task: {err}')
-        print('Failed to add task. Please check log for details.')
+        err = f'Error adding task: {err}'
+        logging.error(err)
+        print('err')
 
 elif command == 'update':
     try:
@@ -181,8 +198,9 @@ elif command == 'update':
         updateTask(id, description)
 
     except Exception as err:
-        logging.error(f'Error updating task: {err}')
-        print('Failed to update task. Please check log for details')
+        err = f'Error updating task: {err}'
+        logging.error(err)
+        print('err')
 
 elif command == 'delete':
     try:
@@ -190,8 +208,9 @@ elif command == 'delete':
         deleteTask(id)
 
     except Exception as err:
-        logging.error(f'Error updating task: {err}')
-        print('Failed to delete task. Please check log for details')
+        err = f'Error upda ting task: {err}'
+        logging.error(err)
+        print(err)
 
 elif command == 'mark-in-progress':
     try:
