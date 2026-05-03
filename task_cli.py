@@ -34,7 +34,19 @@ def addTask(task_dict, description):
                             'updatedAt': dt.datetime.now().strftime(fmt) }})
     logging.debug(f'New Task with id: {id} has been added to the data')
     return id
-def updateTask(id, description):
+def updateTask(task_dict: dict, id: int , description: str):
+    '''
+    Update the description of the task with the given id.
+    If the task with the given id does not exist, print error message and return.
+    '''
+    if task_dict.get(id, 0):
+        task_dict[id]['desc'] = description
+        # Update the updatedAt field
+        fmt = '%Y-%m-%d %H:%M:%S'
+        task_dict[id]['updatedAt'] = dt.datetime.now().strftime(fmt)
+    else:
+        print(f'Task with ID: {id} is not found. Check again for the existing id')
+    
     return None
     
 def deleteTask(id):
