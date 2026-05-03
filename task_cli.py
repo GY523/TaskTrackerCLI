@@ -25,7 +25,7 @@ def print_help():
     
 # Add task with description given into task dictionary and write into file.
 def addTask(task_dict, description):
-    id = len(task_dict.keys()) + 1
+    id = str(len(task_dict.keys()) + 1)
     # Define date time format
     fmt = '%Y-%m-%d %H:%M:%S'
     task_dict.update({id: {'desc': description,
@@ -34,7 +34,8 @@ def addTask(task_dict, description):
                             'updatedAt': dt.datetime.now().strftime(fmt) }})
     logging.debug(f'New Task with id: {id} has been added to the data')
     return id
-def updateTask(task_dict: dict, id: int , description: str):
+
+def updateTask(task_dict: dict, id: str , description: str):
     '''
     Update the description of the task with the given id.
     If the task with the given id does not exist, print error message and return.
@@ -52,8 +53,24 @@ def updateTask(task_dict: dict, id: int , description: str):
 def deleteTask(id):
     return None
 
-def markTaskInProgress(id):
+def markTaskInProgress(task_dict: dict , id: str):
+    '''
+    Mark the task with the given id as in-progess
+    
+    If the task with the given id does not exist, print error message and return.
+    
+    Change the value of the 'status' of a task 
+    '''
+    if task_dict.get(id, 0):
+        task_dict[id]['status'] = 'in-progress'
+        # UPdate the updatedAt field
+        fmt = '%Y-%m-%d %H:%M:%S'
+        task_dict[id]['updatedAt'] = dt.datetime.now().strftime(fmt)
+    else:
+        print(f'Task with ID: {id} is not found. Check again for the existing id')
+
     return None
+
 def markTaskDone(id):
     return None
 
@@ -91,11 +108,12 @@ def listTask(task_dict: dict , status: str):
 # Internal functions
 
 # Read the all tasks from file and assign to a dictionary
-def loadTask(task_file):
+def loadTask(task_dict, task_file):
     # Open the file
     try:
         with open(task_file, 'r', encoding = 'utf-8') as f:
-            task_dict = json.load(f)
+            # the reassignment here causes the references to change, therefore necessary to return dictionary
+            task_dict = json.load(f)        
             logging.debug(f'loadTask(): task data {task_dict}')
 
             return task_dict
@@ -121,12 +139,11 @@ def writeTask(task_file, task_dict):
 # Define the CLI structure
 # get the argument of from command line, if does not match all words, 
 task_dict = {}
-
 if len(sys.argv) > 1 and sys.argv[0].lower() in ['help', 'add','update','delete','mark-in-progress','mark-done','list']:
     # Command given are valid
     # Read the file
     command = sys.argv[0].lower()
-    task_dict = loadTask(TASKFILE)
+    task_dict = loadTask(task_dict, TASKFILE)
 else:
     command = 'help'
 
