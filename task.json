@@ -7,9 +7,9 @@
     },
     "2": {
         "desc": "To add the feature of updating task",
-        "status": "todo",
+        "status": "done",
         "createdAt": "2026-05-03 16:24:09",
-        "updatedAt": "2026-05-03 16:24:09"
+        "updatedAt": "2026-05-03 22:19:39"
     },
     "3": {
         "desc": "This is a new description to test that update task feature works finely",
@@ -22,5 +22,17 @@
         "status": "in-progress",
         "createdAt": "2026-05-03 17:02:25",
         "updatedAt": "2026-05-03 17:32:06"
+    },
+    "5": {
+        "desc": "This task is added from running program in terminal",
+        "status": "done",
+        "createdAt": "2026-05-03 22:15:36",
+        "updatedAt": "2026-05-03 22:22:37"
+    },
+    "6": {
+        "desc": "dj",
+        "status": "todo",
+        "createdAt": "2026-05-03 22:25:56",
+        "updatedAt": "2026-05-03 22:25:56"
     }
 }

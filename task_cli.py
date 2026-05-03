@@ -16,7 +16,7 @@ def print_help():
     commands:\n
         help - show this help message\n
         add (description) - add task with the description\n
-        update (id) (description - update the description of a task\n
+        update (id) (description) - update the description of a task\n
         delete (id) - delete task with given id\n
         mark-in-progress (id) - mark the specified task as in progress\n
         mark-done (id) - mark the task as done\n
@@ -159,7 +159,7 @@ def loadTask(task_dict, task_file):
         print(err)
 
 # Write the tasks from dictionary to the file
-def writeTask(task_file, task_dict):
+def writeTask(task_dict, task_file,):
     # Open the file to write
     with open(task_file, 'w', encoding='utf-8') as f:
         json.dump(task_dict, f, indent=4)
@@ -170,10 +170,10 @@ def writeTask(task_file, task_dict):
 # Define the CLI structure
 # get the argument of from command line, if does not match all words, 
 task_dict = {}
-if len(sys.argv) > 1 and sys.argv[0].lower() in ['help', 'add','update','delete','mark-in-progress','mark-done','list']:
+if len(sys.argv) >= 2  and sys.argv[1].lower() in ['help', 'add','update','delete','mark-in-progress','mark-done','list']:
     # Command given are valid
     # Read the file
-    command = sys.argv[0].lower()
+    command = sys.argv[1].lower()
     task_dict = loadTask(task_dict, TASKFILE)
 else:
     command = 'help'
@@ -181,63 +181,76 @@ else:
 # Define the functions for each command
 if command == 'help':
     print_help()
-elif command == 'add':
+elif command == 'add' and len(sys.argv) == 3:
     try:
-        description = sys.argv[1]
-        id = addTask(description)
+        description = sys.argv[2]
+        id = addTask(task_dict, description)
         print(f'Task added successfully (ID: {id})')
+        writeTask(task_dict, TASKFILE)
+        
     except Exception as err:
         err = f'Error adding task: {err}'
         logging.error(err)
         print('err')
 
-elif command == 'update':
+elif command == 'update' and len(sys.argv) == 4: 
     try:
-        id = int(sys.argv[1])
-        description = sys.argv[2]
-        updateTask(id, description)
+        id = sys.argv[2]
+        description = sys.argv[3]
+        updateTask(task_dict, id, description)
+        writeTask(task_dict, TASKFILE)
 
     except Exception as err:
         err = f'Error updating task: {err}'
         logging.error(err)
-        print('err')
+        print(err)
 
-elif command == 'delete':
+elif command == 'delete' and len(sys.argv) == 3:
     try:
-        id = int(sys.argv[1])
-        deleteTask(id)
+        id = sys.argv[2]
+        deleteTask(task_dict, id)
+        writeTask(task_dict, TASKFILE)
 
     except Exception as err:
-        err = f'Error upda ting task: {err}'
+        err = f'Error deleting task: {err}'
         logging.error(err)
         print(err)
 
-elif command == 'mark-in-progress':
+elif command == 'mark-in-progress' and len(sys.argv) == 3:
     try:
-        id = int(sys.argv[1])
-        markTaskInProgress(id)
+        id = sys.argv[2]
+        markTaskInProgress(task_dict, id)
+        writeTask(task_dict, TASKFILE)
     
     except Exception as err:
-        logging.error(f'Error marking task as in progress: {err}')
-        print('Failed to change status of task. Please check log for details')
-elif command == 'mark-done':
+        err = f'Error marking task as in progress: {err}'
+        logging.error(err)
+        print(err)
+
+elif command == 'mark-done' and len(sys.argv) == 3:
     try:
-        id = int(sys.argv[1])
-        markTaskDone(id)
+        id = sys.argv[2]
+        markTaskDone(task_dict, id)
+        writeTask(task_dict, TASKFILE)
 
     except Exception as err:
-        logging.error(f'Error mark Done: {err}')
-        print(f'Failed to change status of task, Please check log for details')
+        err = f'Error mark Done: {err}'
+        logging.error(err)
+        print(err)
     
-elif command == 'list':
+elif command == 'list' and len(sys.argv) <= 3:
     try:
-        if len(sys.argv) ==1:
-            listTask('')
+        if len(sys.argv) == 2:
+            listTask(task_dict, '')
         else:
-            listTask(sys.argv[1])
+            if sys.argv[2] not in ['todo', 'in-progress', 'done']:
+                raise Exception('Status should be one of "todo", "in-progress", and "done".')
+            else:
+                listTask(task_dict, sys.argv[2])
     except Exception as err:
-        logging.error(f'Error Listing task: {err}')
-        print('Something wrong. Check log for details')
+        err = f'Error Listing task: {err}'
+        logging.error(err)
+        print(err)
 else:
-    logging.error(f'user input logic error')
-
+    print(f'Command "{command}" parameter incorrect')
+    print_help()
