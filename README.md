@@ -9,7 +9,7 @@ Use git clone *this url* or download the **task_cli.py** and put it into a new f
 ## Description and Usage 
 
 Task CLI - A simple Task Management Tool  
- - **usage: task-cli [command] [parameters]**  
+ - **usage: python task-cli [command] [parameters]**  
      - commands:
          - help - show this help message
          - add (description) - add task with the description
