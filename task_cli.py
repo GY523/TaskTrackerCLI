@@ -71,7 +71,22 @@ def markTaskInProgress(task_dict: dict , id: str):
 
     return None
 
-def markTaskDone(id):
+def markTaskDone(task_dict: dict , id: str):
+    '''
+    Mark the task with the given id as done
+    
+    If the task with given id does not exist, print message and return.
+
+    Change the value of the'status of a task    
+    '''
+    if task_dict.get(id, 0):
+        task_dict[id]['status'] = 'done'
+        # Update the updatedAt field
+        fmt = '%Y-%m-%d %H:%M:%S'
+        task_dict[id]['updatedAt'] = dt.datetime.now().strftime(fmt)
+    else:
+        print(f'Task with ID: {id} is not found. Check again for the existing id')
+        
     return None
 
 def listTask(task_dict: dict , status: str):
