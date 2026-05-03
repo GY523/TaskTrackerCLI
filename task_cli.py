@@ -1,12 +1,7 @@
-#
+'''
+Task CLI - A simple Task Management Tool
+'''
 import sys, json, datetime as dt, logging
-
-# Define constants and global variable
-TASKFILE='task.json'
-LOGFILE='log.txt'
-
-# set up logging 
-logging.basicConfig(filename=LOGFILE, level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
 
 # Define functions
 # User functions
@@ -23,8 +18,17 @@ def print_help():
         list [status] - list all (without parameter) or by status\n
             - status: todo/in-progress/done\n''')
     
-# Add task with description given into task dictionary and write into file.
-def addTask(task_dict, description):
+def addTask(task_dict: dict, description: str):
+    '''
+    Add task with the description given. 
+    structure of a task
+    {id:
+	    {description:"",
+        status: '',
+        createdAt: datetime,
+        updatedAt: datetime}
+    }
+    '''
     id = str(len(task_dict.keys()) + 1)
     # Define date time format
     fmt = '%Y-%m-%d %H:%M:%S'
@@ -39,7 +43,7 @@ def addTask(task_dict, description):
 def updateTask(task_dict: dict, id: str , description: str):
     '''
     Update the description of the task with the given id.
-    If the task with the given id does not exist, print error message and return.
+    If the task with the given id does not exist, raise Exception to be handled outside of function.
     '''
     if task_dict.get(id, 0):
         task_dict[id]['desc'] = description
@@ -136,9 +140,10 @@ def listTask(task_dict: dict , status: str):
     return None
 
 # Internal functions
-
-# Read the all tasks from file and assign to a dictionary
-def loadTask(task_dict, task_file):
+def loadTask(task_dict: dict, task_file: str):
+    '''
+    Load the task data from the file and assign to the task dictionary.
+    '''
     # Open the file
     try:
         with open(task_file, 'r', encoding = 'utf-8') as f:
@@ -153,13 +158,16 @@ def loadTask(task_dict, task_file):
         logging.warning(f'{task_file} not found. Creating new file.')
         with open(task_file, 'w', encoding = 'utf-8') as f:
             f.write('{}')
+    # if content is not in json format
     except json.JSONDecodeError as err:
         err = f'JSON decode error: {err}'
         logging.error(err)
         print(err)
 
-# Write the tasks from dictionary to the file
-def writeTask(task_dict, task_file,):
+def writeTask(task_dict: dict, task_file: str):
+    '''
+    Write the tasks from dictionary to the task file
+    '''
     # Open the file to write
     with open(task_file, 'w', encoding='utf-8') as f:
         json.dump(task_dict, f, indent=4)
@@ -167,18 +175,25 @@ def writeTask(task_dict, task_file,):
 
     return None
 
-# Define the CLI structure
-# get the argument of from command line, if does not match all words, 
+# Define constants and global variable
+TASKFILE='task.json'
+LOGFILE='log.txt'
 task_dict = {}
+
+# set up logging 
+logging.basicConfig(filename=LOGFILE, level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
+logging.disable(logging.DEBUG)
+
+# Define the CLI structure
+# get the argument of from command line and check for the length
 if len(sys.argv) >= 2  and sys.argv[1].lower() in ['help', 'add','update','delete','mark-in-progress','mark-done','list']:
     # Command given are valid
-    # Read the file
     command = sys.argv[1].lower()
     task_dict = loadTask(task_dict, TASKFILE)
 else:
     command = 'help'
 
-# Define the functions for each command
+# Define the function calls for each command user enter
 if command == 'help':
     print_help()
 elif command == 'add' and len(sys.argv) == 3:
