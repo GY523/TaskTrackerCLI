@@ -186,86 +186,86 @@ logging.disable(logging.DEBUG)
 
 # Define the CLI structure
 # get the argument of from command line and check for the length
-if len(sys.argv) >= 2  and sys.argv[1].lower() in ['help', 'add','update','delete','mark-in-progress','mark-done','list']:
-    # Command given are valid
+if len(sys.argv) > 1:
     command = sys.argv[1].lower()
     task_dict = loadTask(task_dict, TASKFILE)
 else:
-    command = 'help'
+    print_help()
+    sys.exit(1)
 
 # Define the function calls for each command user enter
-if command == 'help':
-    print_help()
-elif command == 'add' and len(sys.argv) == 3:
-    try:
-        description = sys.argv[2]
-        id = addTask(task_dict, description)
-        print(f'Task added successfully (ID: {id})')
-        writeTask(task_dict, TASKFILE)
+match command:
+    case "help":
+        print_help()
+    case 'add' if len(sys.argv) == 3:
+        try:
+            description = sys.argv[2]
+            id = addTask(task_dict, description)
+            print(f'Task added successfully (ID: {id})')
+            writeTask(task_dict, TASKFILE)
+            
+        except Exception as err:
+            err = f'Error adding task: {err}'
+            logging.error(err)
+            print('err')
+
+    case 'update' if len(sys.argv) == 4: 
+        try:
+            id = sys.argv[2]
+            description = sys.argv[3]
+            updateTask(task_dict, id, description)
+            writeTask(task_dict, TASKFILE)
+
+        except Exception as err:
+            err = f'Error updating task: {err}'
+            logging.error(err)
+            print(err)
+
+    case 'delete' if len(sys.argv) == 3:
+        try:
+            id = sys.argv[2]
+            deleteTask(task_dict, id)
+            writeTask(task_dict, TASKFILE)
+
+        except Exception as err:
+            err = f'Error deleting task: {err}'
+            logging.error(err)
+            print(err)
+
+    case 'mark-in-progress' if len(sys.argv) == 3:
+        try:
+            id = sys.argv[2]
+            markTaskInProgress(task_dict, id)
+            writeTask(task_dict, TASKFILE)
         
-    except Exception as err:
-        err = f'Error adding task: {err}'
-        logging.error(err)
-        print('err')
+        except Exception as err:
+            err = f'Error marking task as in progress: {err}'
+            logging.error(err)
+            print(err)
 
-elif command == 'update' and len(sys.argv) == 4: 
-    try:
-        id = sys.argv[2]
-        description = sys.argv[3]
-        updateTask(task_dict, id, description)
-        writeTask(task_dict, TASKFILE)
+    case 'mark-done' if len(sys.argv) == 3:
+        try:
+            id = sys.argv[2]
+            markTaskDone(task_dict, id)
+            writeTask(task_dict, TASKFILE)
 
-    except Exception as err:
-        err = f'Error updating task: {err}'
-        logging.error(err)
-        print(err)
-
-elif command == 'delete' and len(sys.argv) == 3:
-    try:
-        id = sys.argv[2]
-        deleteTask(task_dict, id)
-        writeTask(task_dict, TASKFILE)
-
-    except Exception as err:
-        err = f'Error deleting task: {err}'
-        logging.error(err)
-        print(err)
-
-elif command == 'mark-in-progress' and len(sys.argv) == 3:
-    try:
-        id = sys.argv[2]
-        markTaskInProgress(task_dict, id)
-        writeTask(task_dict, TASKFILE)
+        except Exception as err:
+            err = f'Error mark Done: {err}'
+            logging.error(err)
+            print(err)
     
-    except Exception as err:
-        err = f'Error marking task as in progress: {err}'
-        logging.error(err)
-        print(err)
-
-elif command == 'mark-done' and len(sys.argv) == 3:
-    try:
-        id = sys.argv[2]
-        markTaskDone(task_dict, id)
-        writeTask(task_dict, TASKFILE)
-
-    except Exception as err:
-        err = f'Error mark Done: {err}'
-        logging.error(err)
-        print(err)
-    
-elif command == 'list' and len(sys.argv) <= 3:
-    try:
-        if len(sys.argv) == 2:
-            listTask(task_dict, '')
-        else:
-            if sys.argv[2] not in ['todo', 'in-progress', 'done']:
-                raise Exception('Status should be one of "todo", "in-progress", and "done".')
+    case 'list' if len(sys.argv) <= 3:
+        try:
+            if len(sys.argv) == 2:
+                listTask(task_dict, '')
             else:
-                listTask(task_dict, sys.argv[2])
-    except Exception as err:
-        err = f'Error Listing task: {err}'
-        logging.error(err)
-        print(err)
-else:
-    print(f'Command "{command}" parameter incorrect')
-    print_help()
+                if sys.argv[2] not in ['todo', 'in-progress', 'done']:
+                    raise Exception('Status should be one of "todo", "in-progress", and "done".')
+                else:
+                    listTask(task_dict, sys.argv[2])
+        except Exception as err:
+            err = f'Error Listing task: {err}'
+            logging.error(err)
+            print(err)
+    case _:
+        print_help()
