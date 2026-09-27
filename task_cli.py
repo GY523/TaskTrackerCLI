@@ -11,10 +11,10 @@ def print_help():
     commands:\n
         help - show this help message\n
         add (description) - add task with the description\n
-        update (id) (description) - update the description of a task\n
-        delete (id) - delete task with given id\n
-        mark-in-progress (id) - mark the specified task as in progress\n
-        mark-done (id) - mark the task as done\n
+        update (t_id) (description) - update the description of a task\n
+        delete (t_id) - delete task with given t_id\n
+        mark-in-progress (t_id) - mark the specified task as in progress\n
+        mark-done (t_id) - mark the task as done\n
         list [status] - list all (without parameter) or by status\n
             - status: todo/in-progress/done\n''')
     
@@ -22,7 +22,7 @@ def addTask(task_dict: dict, description: str):
     '''
     Add task with the description given. 
     structure of a task
-    {id:
+    {t_id:
 	    {description:"",
         status: '',
         createdAt: datetime,
@@ -43,71 +43,71 @@ def addTask(task_dict: dict, description: str):
     
     return new_id
 
-def updateTask(task_dict: dict, id: str , description: str):
+def updateTask(task_dict: dict, t_id: str , description: str):
     '''
-    Update the description of the task with the given id.
-    If the task with the given id does not exist, raise Exception to be handled outside of function.
+    Update the description of the task with the given t_id.
+    If the task with the given t_id does not exist, raise Exception to be handled outst_ide of function.
     '''
-    if task_dict.get(id, 0):
-        task_dict[id]['desc'] = description
+    if task_dict.get(t_id, 0):
+        task_dict[t_id]['desc'] = description
         # Update the updatedAt field
         fmt = '%Y-%m-%d %H:%M:%S'
-        task_dict[id]['updatedAt'] = dt.datetime.now().strftime(fmt)
-        logging.info(f'Task with ID: {id} has been updated with new description: {description}')
+        task_dict[t_id]['updatedAt'] = dt.datetime.now().strftime(fmt)
+        logging.info(f'Task with t_id: {t_id} has been updated with new description: {description}')
     else:
-        raise Exception(f'Task with ID: {id} is not found. Check again for the existing id')
+        raise Exception(f'Task with t_id: {t_id} is not found. Check again for the existing t_id')
     
     return None
     
-def deleteTask(task_dict: dict, id: str):
+def deleteTask(task_dict: dict, t_id: str):
     '''
-    Delete the task with the given id.
+    Delete the task with the given t_id.
 
-    if the id doesn't exist, raise Exception to be handled outside of function.
+    if the t_id doesn't exist, raise Exception to be handled outst_ide of function.
     '''
-    if task_dict.get(id, 0):
-        del task_dict[id]
-        logging.info(f'Task with ID: {id} has been deleted')
+    if task_dict.get(t_id, 0):
+        del task_dict[t_id]
+        logging.info(f'Task with t_id: {t_id} has been deleted')
     else:
-        raise Exception(f'Task with ID: {id} is not found. Check again for the existing id')
+        raise Exception(f'Task with t_id: {t_id} is not found. Check again for the existing t_id')
 
     return None
 
-def markTaskInProgress(task_dict: dict , id: str):
+def markTaskInProgress(task_dict: dict , t_id: str):
     '''
-    Mark the task with the given id as in-progess
+    Mark the task with the given t_id as in-progess
     
-    If the task with the given id does not exist, print error message and return.
+    If the task with the given t_id does not exist, print error message and return.
     
     Change the value of the 'status' of a task 
     '''
-    if task_dict.get(id, 0):
-        task_dict[id]['status'] = 'in-progress'
+    if task_dict.get(t_id, 0):
+        task_dict[t_id]['status'] = 'in-progress'
         # UPdate the updatedAt field
         fmt = '%Y-%m-%d %H:%M:%S'
-        task_dict[id]['updatedAt'] = dt.datetime.now().strftime(fmt)
-        logging.info(f'Task with ID: {id} mark as in progress.')
+        task_dict[t_id]['updatedAt'] = dt.datetime.now().strftime(fmt)
+        logging.info(f'Task with t_id: {t_id} mark as in progress.')
     else:
-        raise Exception(f'Task with ID: {id} is not found. Check again for the existing id')
+        raise Exception(f'Task with t_id: {t_id} is not found. Check again for the existing t_id')
 
     return None
 
-def markTaskDone(task_dict: dict , id: str):
+def markTaskDone(task_dict: dict , t_id: str):
     '''
-    Mark the task with the given id as done
+    Mark the task with the given t_id as done
     
-    If the task with given id does not exist, print message and return.
+    If the task with given t_id does not exist, print message and return.
 
     Change the value of the'status of a task    
     '''
-    if task_dict.get(id, 0):
-        task_dict[id]['status'] = 'done'
+    if task_dict.get(t_id, 0):
+        task_dict[t_id]['status'] = 'done'
         # Update the updatedAt field
         fmt = '%Y-%m-%d %H:%M:%S'
-        task_dict[id]['updatedAt'] = dt.datetime.now().strftime(fmt)
-        logging.info(f'Task with ID: {id} mark as done.')
+        task_dict[t_id]['updatedAt'] = dt.datetime.now().strftime(fmt)
+        logging.info(f'Task with t_id: {t_id} mark as done.')
     else:
-        raise Exception(f'Task with ID: {id} is not found. Check again for the existing id')
+        raise Exception(f'Task with t_id: {t_id} is not found. Check again for the existing t_id')
 
     return None
 
@@ -121,17 +121,17 @@ def listTask(task_dict: dict , status: str):
         print('All Tasks'.center(40, '*'))
 
         # Iterate through all the tasks and properties and print out
-        for id, properties in task_dict.items():
-            print(f'ID: {id}')
+        for t_id, properties in task_dict.items():
+            print(f't_id: {t_id}')
             for k, v in properties.items():
                 print(f'    {k}: {v}')
             print()
     else:
         print(f'Tasks {status}'.center(40, '*'))
         cnt = 0
-        for id, properties in task_dict.items():
+        for t_id, properties in task_dict.items():
             if properties['status'] == status:
-                print(f'ID: {id}')
+                print(f't_id: {t_id}')
                 for k, v in properties.items(): 
                     print(f'    {k}: {v}')
                 print()
@@ -203,8 +203,8 @@ match command:
     case 'add' if len(sys.argv) == 3:
         try:
             description = sys.argv[2]
-            id = addTask(task_dict, description)
-            print(f'Task added successfully (ID: {id})')
+            t_id = addTask(task_dict, description)
+            print(f'Task added successfully (ID: {t_id})')
             writeTask(task_dict, TASKFILE)
             
         except Exception as err:
@@ -214,9 +214,9 @@ match command:
 
     case 'update' if len(sys.argv) == 4: 
         try:
-            id = sys.argv[2]
+            t_id = sys.argv[2]
             description = sys.argv[3]
-            updateTask(task_dict, id, description)
+            updateTask(task_dict, t_id, description)
             writeTask(task_dict, TASKFILE)
 
         except Exception as err:
@@ -226,8 +226,8 @@ match command:
 
     case 'delete' if len(sys.argv) == 3:
         try:
-            id = sys.argv[2]
-            deleteTask(task_dict, id)
+            t_id = sys.argv[2]
+            deleteTask(task_dict, t_id)
             writeTask(task_dict, TASKFILE)
 
         except Exception as err:
@@ -237,8 +237,8 @@ match command:
 
     case 'mark-in-progress' if len(sys.argv) == 3:
         try:
-            id = sys.argv[2]
-            markTaskInProgress(task_dict, id)
+            t_id = sys.argv[2]
+            markTaskInProgress(task_dict, t_id)
             writeTask(task_dict, TASKFILE)
         
         except Exception as err:
@@ -248,8 +248,8 @@ match command:
 
     case 'mark-done' if len(sys.argv) == 3:
         try:
-            id = sys.argv[2]
-            markTaskDone(task_dict, id)
+            t_id = sys.argv[2]
+            markTaskDone(task_dict, t_id)
             writeTask(task_dict, TASKFILE)
 
         except Exception as err:
