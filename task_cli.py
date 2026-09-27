@@ -32,7 +32,7 @@ def addTask(task_dict: dict, description: str):
     id_list = list(map(int, task_dict.keys())) # [id1, id2]
 
 
-    new_id = max(id_list) + 1
+    new_id = max(id_list, default=0) + 1
     # Define date time format
     fmt = '%Y-%m-%d %H:%M:%S'
     task_dict.update({new_id: {'desc': description,
@@ -40,7 +40,7 @@ def addTask(task_dict: dict, description: str):
                             'createdAt': dt.datetime.now().strftime(fmt),
                             'updatedAt': dt.datetime.now().strftime(fmt) }})
     logging.info(f'New Task with id: {id} has been added to the data')
-
+    
     return new_id
 
 def updateTask(task_dict: dict, id: str , description: str):
@@ -210,7 +210,7 @@ match command:
         except Exception as err:
             err = f'Error adding task: {err}'
             logging.error(err)
-            print('err')
+            print(err)
 
     case 'update' if len(sys.argv) == 4: 
         try:
