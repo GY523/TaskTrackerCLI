@@ -19,3 +19,8 @@ Task CLI - A simple Task Management Tool
          - mark-done (id) - mark the task as done
          - list [status] - list all (without parameter) or by status
             - status: todo/in-progress/done'''
+
+# Requirements:
+1. I need tools to keep track of the things I have to do when I am on my computer
+2. Simple, lightweight and intuitive enough.
+
