@@ -23,12 +23,6 @@
         "createdAt": "2026-05-03 17:02:25",
         "updatedAt": "2026-05-03 17:32:06"
     },
-    "5": {
-        "desc": "This task is added from running program in terminal",
-        "status": "done",
-        "createdAt": "2026-05-03 22:15:36",
-        "updatedAt": "2026-05-03 22:22:37"
-    },
     "6": {
         "desc": "apabila",
         "status": "in-progress",
@@ -36,9 +30,15 @@
         "updatedAt": "2026-06-11 15:48:18"
     },
     "7": {
-        "desc": "new task here for last testing",
+        "desc": "Testing add after delete id in between",
         "status": "todo",
-        "createdAt": "2026-05-03 22:54:26",
-        "updatedAt": "2026-05-03 22:54:26"
+        "createdAt": "2026-09-27 19:06:54",
+        "updatedAt": "2026-09-27 19:06:54"
+    },
+    "8": {
+        "desc": "new testing",
+        "status": "todo",
+        "createdAt": "2026-09-27 19:13:17",
+        "updatedAt": "2026-09-27 19:13:17"
     }
 }

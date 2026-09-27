@@ -29,16 +29,19 @@ def addTask(task_dict: dict, description: str):
         updatedAt: datetime}
     }
     '''
-    id = str(len(task_dict.keys()) + 1)
+    id_list = list(map(int, task_dict.keys())) # [id1, id2]
+
+
+    new_id = max(id_list) + 1
     # Define date time format
     fmt = '%Y-%m-%d %H:%M:%S'
-    task_dict.update({id: {'desc': description,
+    task_dict.update({new_id: {'desc': description,
                             'status': 'todo',
                             'createdAt': dt.datetime.now().strftime(fmt),
                             'updatedAt': dt.datetime.now().strftime(fmt) }})
     logging.info(f'New Task with id: {id} has been added to the data')
 
-    return id
+    return new_id
 
 def updateTask(task_dict: dict, id: str , description: str):
     '''
